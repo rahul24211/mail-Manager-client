@@ -27,6 +27,7 @@ const Login = () => {
     try {
       setLoading(true);
       setError("");
+      console.log("API URL:", apiUrl);
 
       const res = await axios.post(`${apiUrl}/login`, {
         email: formData.email,
