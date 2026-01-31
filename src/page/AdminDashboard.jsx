@@ -17,7 +17,6 @@ const AdminDashboard = () => {
         });
 
         setDetails(res.data.AllDetails);
-        console.log(res.data);
       } catch (error) {
         console.error("Summary error", error);
       }
@@ -25,7 +24,7 @@ const AdminDashboard = () => {
 
     fetchDetails();
   }, []);
-  console.log(details);
+  
 
   return (
     <div className="container mt-5">
