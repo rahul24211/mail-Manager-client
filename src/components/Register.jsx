@@ -25,14 +25,11 @@ const Register = () => {
       error = "Name must be at least 3 characters";
     }
 
-    if (
-      name === "email" &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-    ) {
+    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       error = "Enter a valid email address";
     }
 
-    if (name === "userType" && !["employee", "hr"].includes(value)) {
+    if (name === "userType" && !["Employee", "HR"].includes(value)) {
       error = "User type must be Employee or HR";
     }
 
@@ -116,9 +113,7 @@ const Register = () => {
               <div className="mb-3">
                 <label>Name</label>
                 <input
-                  className={`form-control ${
-                    errors.name ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -132,9 +127,7 @@ const Register = () => {
               <div className="mb-3">
                 <label>Email</label>
                 <input
-                  className={`form-control ${
-                    errors.email ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
@@ -156,8 +149,8 @@ const Register = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select role</option>
-                  <option value="employee">Employee</option>
-                  <option value="hr">HR</option>
+                  <option value="Employee">Employee</option>
+                  <option value="HR">HR</option>
                 </select>
                 {errors.userType && (
                   <div className="invalid-feedback">{errors.userType}</div>
@@ -203,9 +196,7 @@ const Register = () => {
               transition={{ repeat: Infinity, duration: 2 }}
             />
             <h5 className="mt-3">Add New User</h5>
-            <p className="text-muted">
-              Only Employee & HR roles are allowed
-            </p>
+            <p className="text-muted">Only Employee & HR roles are allowed</p>
           </div>
         </motion.div>
       </div>
