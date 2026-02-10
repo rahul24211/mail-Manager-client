@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [form, setForm] = useState({
     oldPassword: "",
     newPassword: "",
   });
+  const navigate = useNavigate()
 
   const [details, setDetails] = useState({});
 
@@ -80,14 +82,18 @@ const Profile = () => {
       )}
 
       <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+       
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="container"
         >
+          
           <div className="row justify-content-center">
+             
             <div className="col-md-8 col-lg-6">
+              <button onClick={()=> navigate(-2)} className="btn btn-secondary mb-2 form-control">Back</button>
               <div className="card shadow-lg rounded-4 border-0">
                 <div className="card-body p-4">
                   <div className="d-flex justify-content-between align-items-center">

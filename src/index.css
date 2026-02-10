@@ -144,3 +144,16 @@
   transform: translateY(-6px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
 }
+
+/* --------------- notifications */
+
+.notification-item {
+  background: #f9f9f9;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.notification-item:hover {
+  background: #e9ecef;
+  transform: translateX(-3px);
+}

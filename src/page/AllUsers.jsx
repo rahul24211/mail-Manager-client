@@ -1,12 +1,40 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
 
   const apiurl = import.meta.env.VITE_API_URL;
+
+  const handleToggleStatus = async (id, currentStatus) => {
+    const newStatus = currentStatus === "Active" ? "Inactive" : "Active";
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.patch(
+        `${apiurl}/updateuserstatus`,
+        { id, status: newStatus },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      // UI update (important)
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === id ? { ...user, status: newStatus } : user,
+        ),
+      );
+    } catch (error) {
+      console.log(error.message);
+      alert("Status update failed");
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,6 +61,7 @@ const AllUsers = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="card shadow p-4 mt-4">
+        <button onClick={()=> navigate(-1)} className="btn btn-secondary mb-2">Back</button>
         <h5 className="fw-bold mb-3">👥 All Users</h5>
 
         {/* Loading */}
@@ -51,7 +80,10 @@ const AllUsers = () => {
 
         {/* Table */}
         {!loading && (
-          <div className="table-responsive">
+          <div
+            style={{ overflow: "auto", maxHeight: "400px" }}
+            className="table-responsive"
+          >
             <table className="table align-middle text-center">
               <thead className="table-light">
                 <tr>
@@ -79,16 +111,33 @@ const AllUsers = () => {
                       <td>{item.email}</td>
                       <td>
                         <motion.span
-                          whileHover={{ scale: 1.1 }}
-                          className={`badge px-3 py-2 ${
+                          key={item.status}
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`fw-bold ${
                             item.status === "Active"
-                              ? "bg-success"
-                              : "bg-danger"
+                              ? "text-success"
+                              : "text-danger"
                           }`}
                         >
                           {item.status}
                         </motion.span>
+
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() =>
+                            handleToggleStatus(item.id, item.status)
+                          }
+                          className={`btn btn-sm ms-2 ${
+                            item.status === "Active"
+                              ? "btn-outline-danger"
+                              : "btn-outline-success"
+                          }`}
+                        >
+                          {item.status === "Active" ? "Deactivate" : "Activate"}
+                        </motion.button>
                       </td>
+
                       <td>
                         <span className="badge bg-info">
                           {new Date(item.createdAt).toLocaleDateString()}

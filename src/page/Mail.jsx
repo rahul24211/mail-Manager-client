@@ -54,6 +54,7 @@ const Mail = () => {
 
   return (
     <div className="container mt-4">
+      <button className="mb-2 btn btn-secondary" onClick={()=> navigate(-1)}>Back</button>
       <div className="card shadow-lg border-0 rounded-4">
         {/* Header */}
         <div className="card-header bg-white border-bottom">

@@ -1,29 +1,47 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [details, setDetails] = useState({});
+  const apiurl = import.meta.env.VITE_API_URL;
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+
+  //   if (!storedUser) {
+  //     navigate("/login");
+  //   } else {
+  //     setUser(JSON.parse(storedUser));
+  //   }
+  // }, [navigate]);
+
+  // if (!user) return null;
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    try {
+      const fetchUser = async () => {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${apiurl}/userdetails`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    if (!storedUser) {
-      navigate("/login");
-    } else {
-      setUser(JSON.parse(storedUser));
+        setDetails(res.data.userDetails);
+      };
+      fetchUser();
+    } catch (error) {
+      console.log(error.message);
     }
-  }, [navigate]);
-
-  if (!user) return null;
+  }, []);
 
   return (
     <div className="container mt-5 fade-in">
       {/* Welcome Section */}
       <div className="text-center mb-5">
-        <h2 className="fw-bold slide-down">
-          Welcome, {user.name} 👋
-        </h2>
+        <h2 className="fw-bold slide-down">Welcome, {details.name} 👋</h2>
         <p className="text-muted">
           Manage your mails, send requests and track approval status easily.
         </p>
@@ -34,21 +52,21 @@ const UserDashboard = () => {
         <div className="col-md-4">
           <div className="card shadow-sm p-3 hover-card">
             <h6 className="text-muted">Role</h6>
-            <h5 className="fw-bold text-primary">{user.userType}</h5>
+            <h5 className="fw-bold text-primary">{details.userType}</h5>
           </div>
         </div>
 
         <div className="col-md-4">
           <div className="card shadow-sm p-3 hover-card">
             <h6 className="text-muted">Status</h6>
-            <h5 className="fw-bold text-success">Active</h5>
+            <h5 className="fw-bold text-success">{details.status}</h5>
           </div>
         </div>
 
         <div className="col-md-4">
           <div className="card shadow-sm p-3 hover-card">
             <h6 className="text-muted">Dashboard</h6>
-            <h5 className="fw-bold text-dark">User Panel</h5>
+            <h5 style={{cursor : "pointer"}} className="fw-bold text-dark" onClick={()=> navigate('/maildashboard')} >Mail Panal</h5>
           </div>
         </div>
       </div>

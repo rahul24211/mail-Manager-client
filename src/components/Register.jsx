@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Register = () => {
     userType: "",
   });
 
+  const navigate = useNavigate()
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
@@ -81,6 +83,7 @@ const Register = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
     >
+      <button onClick={()=> navigate(-2)} className="btn btn-secondary mb-2">Back</button>
       <h2 className="mb-4 fw-bold">⚙️ Admin Panel</h2>
 
       {/* Alert */}

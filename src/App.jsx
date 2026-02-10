@@ -19,7 +19,12 @@ import UnAuthorize from "./page/UnAuthorize";
 import Profile from "./page/Profile";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AllUsers from "./page/AllUsers";
-
+import About from "./components/About";
+import Notification from "./page/Notification";
+import "bootstrap/dist/css/bootstrap.min.css";
+import MailDashboard from "./page/MailDashboard";
+import MailChartAdmin from "./page/MailChartAdmin";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -105,6 +110,24 @@ const App = () => {
         />
 
         <Route
+          path="/maildashboard"
+          element={
+            <ProtectedRoute allowedRoles={["Employee"]}>
+              <MailDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/mailchartadmin"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <MailChartAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/allusers"
           element={
             <ProtectedRoute allowedRoles={["Admin"]}>
@@ -112,9 +135,11 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/about" element={<About />} />
 
         <Route path="/unauthorize" element={<UnAuthorize />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 };

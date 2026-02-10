@@ -3,6 +3,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import MailDashboard from "./MailDashboard";
+import MailChartAdmin from "./MailChartAdmin";
 
 const AdminDashboard = () => {
   const [details, setDetails] = useState({});
@@ -24,7 +26,6 @@ const AdminDashboard = () => {
 
     fetchDetails();
   }, []);
-  
 
   return (
     <div className="container mt-5">
@@ -76,7 +77,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-
+      <MailChartAdmin />
       {/* Bottom Section */}
       <div className="card mt-5 p-4 animate delay-3">
         <h5>Quick Actions</h5>

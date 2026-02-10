@@ -64,6 +64,7 @@ const SendMail = () => {
   return (
     <div className="container mt-5 fade-in">
       <div className="text-center mb-4">
+        <button onClick={()=> navigate(-1)} className="btn btn-secondary mb-2 form-control">Back</button> 
         <h2 className="fw-bold slide-down">📧 Send Mail</h2>
         <p className="text-muted">
           Compose your mail and send it for admin approval

@@ -43,6 +43,7 @@ const AdminRequests = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      <button onClick={()=> navigate(-2)} className="btn btn-secondary mb-2 form-control">Back</button>
       <h4 className="fw-bold mb-3">📩 Mail Requests</h4>
 
       <div className="card shadow-sm p-3">
@@ -64,7 +65,7 @@ const AdminRequests = () => {
         </div>
 
         {/* Table */}
-        <div className="table-responsive">
+        <div className="table-responsive" style={{maxHeight : "400px", overflow : "auto"}}>
           <table className="table table-bordered align-middle text-center">
             <thead className="table-light">
               <tr>
@@ -102,9 +103,7 @@ const AdminRequests = () => {
                       <td>{mail.sender?.email || "-"}</td>
 
                       <td
-                        onClick={() =>
-                          navigate(`/mailadminside/${mail.id}`)
-                        }
+                        onClick={() => navigate(`/mailadminside/${mail.id}`)}
                         className="text-primary fw-semibold"
                       >
                         {mail.subject?.slice(0, 40)}
