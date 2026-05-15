@@ -25,10 +25,24 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import MailDashboard from "./page/MailDashboard";
 import MailChartAdmin from "./page/MailChartAdmin";
 import Footer from "./components/Footer";
+import AddBanners from "./page/AddBanners";
+import BannerUserSide from "./page/BannerUserSide";
+import { Toaster } from "sonner";
+import Categories from "./page/Categories";
+import AddProduct from "./page/AddProduct";
+import CategoryUserSide from "./page/CategoryUserSide";
+import Foods from "./page/Foods";
+import CartPage from "./page/CartPage";
 
 const App = () => {
   return (
     <Router>
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        toastOptions={{ className: "text-capitalize" }}
+      />
       <Navbar />
       <Routes>
         <Route path="/" element={<RoleBasedRedirect />} />
@@ -135,11 +149,71 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/banners"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AddBanners />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/userbanner"
+          element={
+            <ProtectedRoute allowedRoles={["Employee"]}>
+              <BannerUserSide />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <Categories />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/products/:id/:CName"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AddProduct />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/foodcategory"
+          element={
+            <ProtectedRoute allowedRoles={["Employee"]}>
+              <CategoryUserSide />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/foods/:id/:CName"
+          element={
+            <ProtectedRoute allowedRoles={["Employee"]}>
+              <Foods/>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="cartpage"
+          element={
+            <ProtectedRoute allowedRoles={["Employee"]}>
+              <CartPage/>
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/about" element={<About />} />
 
         <Route path="/unauthorize" element={<UnAuthorize />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </Router>
   );
 };

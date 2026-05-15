@@ -157,3 +157,48 @@
   background: #e9ecef;
   transform: translateX(-3px);
 }
+
+/* -------------------  toaster */
+
+/* -------------- */
+
+#addCard {
+  height: 400px;
+  width: 400px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+
+/* ---------- */
+
+.addPage{
+  background-color: gray;
+  height: 100px;
+  width: 100px;
+  
+}
+
+/* ----------   productImg */
+
+#productImg{
+  transition: 0.4s;
+  width: 100%;
+}
+#productImg:hover{
+transform: scale(1.2);
+
+}
+
+
+/* ------------- cartItems */
+
+#CartItem{
+  transition: 0.4s ease;
+  cursor: pointer;
+}
+
+#CartItem:active{
+  transform: scale(0.9);
+ 
+}

@@ -1,23 +1,53 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import NotificationBell from "../page/Notification";
+import axios from "axios";
+import { toast } from "sonner";
+import { Cart, Cart2, Cart4, CartCheckFill, CartX } from "react-bootstrap-icons";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
 
+  const [img, setImg] = useState({});
   const user = localStorage.getItem("user");
   const userObj = user ? JSON.parse(user) : null;
   const role = userObj?.userType;
+  const token = localStorage.getItem("token");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-    closeNavbar();
+  useEffect(() => {
+    const fetchImg = async () => {
+      const res = await axios.get(`${apiUrl}/userdetails`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setImg(res.data.userDetails.image);
+    };
+    fetchImg();
+  }, [user]);
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/logout`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      navigate("/login");
+      closeNavbar();
+
+      toast.success(res.data.message);
+    } catch (error) {
+      toast.error(error.res?.data?.message);
+    }
   };
 
-  // ✅ Navbar close function
   const closeNavbar = () => {
     const nav = document.getElementById("navbarNav");
     if (nav?.classList.contains("show")) {
@@ -25,7 +55,6 @@ const Navbar = () => {
     }
   };
 
-  // ✅ Outside click close
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (navRef.current && !navRef.current.contains(e.target)) {
@@ -49,8 +78,31 @@ const Navbar = () => {
           to={role === "Admin" ? "/" : role ? "/userdashboard" : "/login"}
           onClick={closeNavbar}
         >
-          MyApp
+          Mail-Manager
         </NavLink>
+
+        {/* 🔔 PROFILE + NOTIFICATION OUTSIDE COLLAPSE */}
+        {role && (
+          <div className="d-flex align-items-center gap-3 ms-auto me-2 order-lg-2">
+            <div onClick={closeNavbar}>
+              <NotificationBell />
+            </div>
+
+            <NavLink to="/changepassword">
+              <img
+                src={`${apiUrl}${img}`}
+                className="rounded-circle"
+                onClick={closeNavbar}
+                style={{
+                  height: "35px",
+                  width: "35px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                }}
+              />
+            </NavLink>
+          </div>
+        )}
 
         {/* TOGGLER */}
         <button
@@ -65,7 +117,6 @@ const Navbar = () => {
         {/* NAV ITEMS */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto align-items-lg-center gap-2">
-            {/* 🔐 NOT LOGGED IN */}
             {!role && (
               <>
                 <li className="nav-item">
@@ -90,21 +141,26 @@ const Navbar = () => {
               </>
             )}
 
-            {/* 👤 EMPLOYEE */}
             {role === "Employee" && (
               <>
                 <li className="nav-item">
                   <NavLink
-                    className="nav-link bi bi-person-fill text-info"
-                    to="/changepassword"
+                    className="nav-link"
+                    to="/cartpage"
                     onClick={closeNavbar}
-                  ></NavLink>
+                  >
+                    <Cart4/>
+                  </NavLink>
                 </li>
-
-                <li onClick={closeNavbar}>
-                  <NotificationBell />
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    to="/foodcategory"
+                    onClick={closeNavbar}
+                  >
+                    Order-Books
+                  </NavLink>
                 </li>
-
                 <li className="nav-item">
                   <NavLink
                     className="nav-link"
@@ -137,20 +193,13 @@ const Navbar = () => {
               </>
             )}
 
-            {/* 🛡️ ADMIN */}
             {role === "Admin" && (
               <>
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link bi bi-person-fill text-info"
-                    to="/changepassword"
-                    onClick={closeNavbar}
-                  ></NavLink>
+              <li className="nav-item">
+                  <NavLink className="nav-link" to="/categories" onClick={closeNavbar}>
+                   Books-Categories
+                  </NavLink>
                 </li>
-                <li onClick={closeNavbar}>
-                  <NotificationBell />
-                </li>
-
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/" onClick={closeNavbar}>
                     Home
@@ -179,7 +228,6 @@ const Navbar = () => {
               </>
             )}
 
-            {/* 🚪 LOGOUT */}
             {role && (
               <li className="nav-item">
                 <button

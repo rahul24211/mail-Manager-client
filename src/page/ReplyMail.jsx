@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ReplyMail = () => {
   const { state } = useLocation(); // yahan mail data aayega
@@ -13,7 +14,7 @@ const ReplyMail = () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.post(
+    const res =  await axios.post(
         `${apiurl}/sendreply`,
         {
           toUserId: state.sender.id,
@@ -27,10 +28,11 @@ const ReplyMail = () => {
         },
       );
 
-      alert("Reply sent successfully");
+      toast.success(res.data.message)
       navigate(-2);
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message)
     }
   };
 

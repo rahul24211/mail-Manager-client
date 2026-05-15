@@ -1,31 +1,45 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AdminRequests = () => {
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab") || "all";
+  const [activeTab, setActiveTab] = useState(tab);
+  const [search, setSearch] = useState("");
   const [data, setData] = useState({
     all: [],
     pending: [],
     approved: [],
     rejected: [],
   });
+  useEffect(() => {
+    setActiveTab(tab);
+  }, [tab]);
 
-  const [activeTab, setActiveTab] = useState("all");
   const apiurl = import.meta.env.VITE_API_URL;
 
+  const fetchMail = async (value = "") => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${apiurl}/getallrequest?search=${value}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setData(res.data.data);
+  };
+
   useEffect(() => {
-    const fetchMail = async () => {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${apiurl}/getallrequest`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setData(res.data.data);
-    };
     fetchMail();
   }, []);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      fetchMail(search);
+    }, 400);
+
+    return () => clearTimeout(delay);
+  }, [search]);
 
   const getActiveMails = () => data[activeTab] || [];
 
@@ -43,8 +57,22 @@ const AdminRequests = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <button onClick={()=> navigate(-2)} className="btn btn-secondary mb-2 form-control">Back</button>
-      <h4 className="fw-bold mb-3">📩 Mail Requests</h4>
+      <button
+        onClick={() => navigate(-1)}
+        className="btn btn-secondary mb-2 form-control"
+      >
+        Back
+      </button>
+      <div className="d-flex justify-content-between align-items-center">
+        <h4 className="fw-bold mb-3">📩 Mail Requests</h4>
+        <input
+          style={{ borderRadius: "20px", width: "250px" }}
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
       <div className="card shadow-sm p-3">
         {/* Tabs */}
@@ -65,7 +93,10 @@ const AdminRequests = () => {
         </div>
 
         {/* Table */}
-        <div className="table-responsive" style={{maxHeight : "400px", overflow : "auto"}}>
+        <div
+          className="table-responsive"
+          style={{ maxHeight: "400px", overflow: "auto" }}
+        >
           <table className="table table-bordered align-middle text-center">
             <thead className="table-light">
               <tr>

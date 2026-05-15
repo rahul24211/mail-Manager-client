@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const MailDashboard = () => {
   const [stats, setStats] = useState({});
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const COLORS = {
     Approved: "#28a745", // green
     Rejected: "#dc3545", // red
@@ -41,7 +41,12 @@ const navigate = useNavigate()
 
   return (
     <div className="container mt-4">
-      <button onClick={()=> navigate(-1)} className="btn btn-secondary mb-2 form-control">Back</button>
+      <button
+        onClick={() => navigate(-1)}
+        className="btn btn-secondary mb-2 form-control"
+      >
+        Back
+      </button>
       <h3 className="mb-4">Mail Dashboard</h3>
 
       <div className="row">

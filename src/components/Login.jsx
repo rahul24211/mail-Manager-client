@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { toast } from "sonner";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -13,7 +13,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -22,10 +22,7 @@ const Login = () => {
   const validate = (name, value) => {
     let error = "";
 
-    if (
-      name === "email" &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-    ) {
+    if (name === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       error = "Enter a valid email address";
     }
 
@@ -66,7 +63,8 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      setMessage(message);
+      // setMessage(message);
+      toast.success(res.data.message);
       setFormData({ email: "", password: "" });
 
       setTimeout(() => {
@@ -77,7 +75,8 @@ const Login = () => {
         }
       }, 800);
     } catch (error) {
-      setMessage(error.response?.data?.message || "Login failed");
+      // setMessage(error.response?.data?.message || "Login failed");
+      toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -86,7 +85,7 @@ const Login = () => {
   return (
     <>
       {/* Alert */}
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {message && (
           <motion.div
             className="alert alert-info d-flex justify-content-between align-items-center text-capitalize"
@@ -102,7 +101,7 @@ const Login = () => {
             ></i>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-light">
         <motion.div
@@ -123,9 +122,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`form-control ${
-                  errors.email ? "is-invalid" : ""
-                }`}
+                className={`form-control ${errors.email ? "is-invalid" : ""}`}
               />
               {errors.email && (
                 <div className="invalid-feedback">{errors.email}</div>
@@ -145,9 +142,7 @@ const Login = () => {
                 }`}
               />
               {errors.password && (
-                <div className="invalid-feedback">
-                  {errors.password}
-                </div>
+                <div className="invalid-feedback">{errors.password}</div>
               )}
             </div>
 

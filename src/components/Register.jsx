@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,9 +12,9 @@ const Register = () => {
     userType: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   const token = localStorage.getItem("token");
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -67,13 +68,15 @@ const Register = () => {
       const res = await axios.post(`${apiUrl}/createuser`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMessage(res.data.message);
+      // setMessage(res.data.message);
+      toast.success(res.data.message);
       setFormData({ name: "", email: "", password: "", userType: "" });
-      setErrors({});
-      setTimeout(() => setMessage(""), 3000);
+      // setErrors({});
+      // setTimeout(() => setMessage(""), 3000);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Error creating user");
-      setTimeout(() => setMessage(""), 3000);
+      // setMessage(err.response?.data?.message || "Error creating user");
+      toast.error(err.response?.data?.message);
+      // setTimeout(() => setMessage(""), 3000);
     }
   };
 
@@ -83,11 +86,13 @@ const Register = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <button onClick={()=> navigate(-2)} className="btn btn-secondary mb-2">Back</button>
+      <button onClick={() => navigate(-1)} className="btn btn-secondary mb-2">
+        Back
+      </button>
       <h2 className="mb-4 fw-bold">⚙️ Admin Panel</h2>
 
       {/* Alert */}
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {message && (
           <motion.div
             className="alert alert-info d-flex justify-content-between align-items-center"
@@ -103,7 +108,7 @@ const Register = () => {
             ></i>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
 
       <div className="row">
         {/* FORM */}

@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 const RoleBasedRedirect = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) {
+  if (!user || user.status === "Inactive") {
     return <Navigate to="/login" replace />;
   }
 

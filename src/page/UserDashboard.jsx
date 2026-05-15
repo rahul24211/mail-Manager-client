@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BannerUserSide from "./BannerUserSide";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -37,6 +38,8 @@ const UserDashboard = () => {
     }
   }, []);
 
+ 
+  
   return (
     <div className="container mt-5 fade-in">
       {/* Welcome Section */}
@@ -47,12 +50,14 @@ const UserDashboard = () => {
         </p>
       </div>
 
+      <BannerUserSide />
+
       {/* Stats */}
       <div className="row mb-4 text-center">
         <div className="col-md-4">
           <div className="card shadow-sm p-3 hover-card">
             <h6 className="text-muted">Role</h6>
-            <h5 className="fw-bold text-primary">{details.userType}</h5>
+            <h5 className="fw-bold text-primary">{details.usertype}</h5>
           </div>
         </div>
 
@@ -66,7 +71,13 @@ const UserDashboard = () => {
         <div className="col-md-4">
           <div className="card shadow-sm p-3 hover-card">
             <h6 className="text-muted">Dashboard</h6>
-            <h5 style={{cursor : "pointer"}} className="fw-bold text-dark" onClick={()=> navigate('/maildashboard')} >Mail Panal</h5>
+            <h5
+              style={{ cursor: "pointer" }}
+              className="fw-bold text-dark"
+              onClick={() => navigate("/maildashboard")}
+            >
+              Mail Panal
+            </h5>
           </div>
         </div>
       </div>

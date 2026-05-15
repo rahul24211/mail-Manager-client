@@ -2,18 +2,19 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const ReplyMailByAdmin = () => {
   const { state } = useLocation(); // yahan mail data aayega
   const navigate = useNavigate();
 
   const [composeMail, setComposeMail] = useState("");
- const apiurl = import.meta.env.VITE_API_URL;
+  const apiurl = import.meta.env.VITE_API_URL;
   const sendReply = async () => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.post(
+     const res = await axios.post(
         `${apiurl}/sendreply`,
         {
           toUserId: state.sender.id,
@@ -27,10 +28,11 @@ const ReplyMailByAdmin = () => {
         },
       );
 
-      alert("Reply sent successfully");
+      toast.success(res.data.message)
       navigate(-2);
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message)
     }
   };
 
@@ -38,6 +40,9 @@ const ReplyMailByAdmin = () => {
 
   return (
     <div className="container mt-4">
+      <button onClick={() => navigate(-1)} className="btn btn-secondary mb-2">
+        Back
+      </button>
       <h5>Reply to {state.sender.email}</h5>
 
       <input

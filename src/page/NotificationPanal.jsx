@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const NotificationPanel = ({ open, close }) => {
   const [notifications, setNotifications] = useState([]);
@@ -28,14 +29,16 @@ const NotificationPanel = ({ open, close }) => {
 
   const handleDeleteNotification = async (id) => {
     try {
-      await axios.delete(`${apiUrl}/deletenotification?id=${id}`, {
+    const res =  await axios.delete(`${apiUrl}/deletenotification?id=${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      toast.success(res.data.message)
       // 🔥 turant UI se remove
       setNotifications((prev) => prev.filter((notify) => notify.id !== id));
     } catch (error) {
       console.log(error.message);
+      toast.error(error.response?.data?.message)
     }
   };
 
@@ -123,7 +126,7 @@ const NotificationPanel = ({ open, close }) => {
                 >
                   {/* Left */}
                   <div>
-                    <strong className="d-block">{notify.tital}</strong>
+                    <strong className="d-block">{notify.title}</strong>
 
                     <small
                       onClick={() => {

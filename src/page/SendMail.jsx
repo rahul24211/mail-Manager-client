@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const SendMail = () => {
   const apiurl = import.meta.env.VITE_API_URL;
@@ -13,7 +14,6 @@ const SendMail = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setMail({ ...mail, [e.target.name]: e.target.value });
@@ -23,39 +23,31 @@ const SendMail = () => {
     e.preventDefault();
 
     if (!mail.toEmailId.includes("@")) {
-      return setMessage("Please enter a valid email address");
+      return toast.error("Please enter a valid email address");
     }
 
     if (mail.subject.length < 3) {
-      return setMessage("Subject must be at least 3 characters");
-    }
-
-    if (mail.composeMail.length < 10) {
-      return setMessage("Message must be at least 10 characters");
+      return toast.error("Subject must be at least 3 characters");
     }
 
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      await axios.post(
-        `${apiurl}/registerRequest`,
-        mail,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.post(`${apiurl}/registerRequest`, mail, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      setMessage("Mail sent for approval successfully ✅");
+      toast.success(res.data.message);
       setMail({ toEmailId: "", subject: "", composeMail: "" });
 
       setTimeout(() => {
         navigate("/mymail");
       }, 1200);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Something went wrong");
+      toast.error(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -64,16 +56,17 @@ const SendMail = () => {
   return (
     <div className="container mt-5 fade-in">
       <div className="text-center mb-4">
-        <button onClick={()=> navigate(-1)} className="btn btn-secondary mb-2 form-control">Back</button> 
+        <button
+          onClick={() => navigate(-1)}
+          className="btn btn-secondary mb-2 form-control"
+        >
+          Back
+        </button>
         <h2 className="fw-bold slide-down">📧 Send Mail</h2>
         <p className="text-muted">
           Compose your mail and send it for admin approval
         </p>
       </div>
-
-      {message && (
-        <div className="alert alert-info text-center">{message}</div>
-      )}
 
       <div className="card shadow p-4 hover-card">
         <form onSubmit={handleSubmit}>
@@ -119,10 +112,7 @@ const SendMail = () => {
             ></textarea>
           </div>
 
-          <button
-            className="btn btn-primary w-100"
-            disabled={loading}
-          >
+          <button className="btn btn-primary w-100" disabled={loading}>
             {loading ? "Sending..." : "Send Mail"}
           </button>
         </form>

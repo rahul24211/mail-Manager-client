@@ -1,22 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const MailAdminSide = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [mail, setMail] = useState(null);
- const apiurl = import.meta.env.VITE_API_URL;
+  const apiurl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchMail = async () => {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        `${apiurl}/fetchmailbyid?id=${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const res = await axios.get(`${apiurl}/fetchmailbyid?id=${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setMail(res.data.mail);
     };
@@ -27,14 +25,19 @@ const MailAdminSide = () => {
   const updateStatus = async (status) => {
     const token = localStorage.getItem("token");
 
-    await axios.patch(
-      `${apiurl}/updatestatus/${id}`,
-      { status },
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    try {
+      const res = await axios.patch(
+        `${apiurl}/updatestatus/${id}`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
 
-    alert(`Mail ${status} successfully`);
-    navigate("/adminrequest");
+      // alert(`Mail ${status} successfully`);
+      toast.success(res.data.message);
+      navigate("/adminrequest");
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
   };
 
   if (!mail) return <div className="text-center mt-5">Loading...</div>;
