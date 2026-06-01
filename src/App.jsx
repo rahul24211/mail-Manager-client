@@ -33,6 +33,10 @@ import AddProduct from "./page/AddProduct";
 import CategoryUserSide from "./page/CategoryUserSide";
 import Foods from "./page/Foods";
 import CartPage from "./page/CartPage";
+import Coupons from "./page/Coupons";
+import VerifyOtp from "./page/VerifyOtp";
+import ForgetPassVerify from "./page/ForgetPassVerify";
+import ForgetPass from "./page/ForgetPass";
 
 const App = () => {
   return (
@@ -196,7 +200,7 @@ const App = () => {
           path="/foods/:id/:CName"
           element={
             <ProtectedRoute allowedRoles={["Employee"]}>
-              <Foods/>
+              <Foods />
             </ProtectedRoute>
           }
         />
@@ -204,12 +208,31 @@ const App = () => {
           path="cartpage"
           element={
             <ProtectedRoute allowedRoles={["Employee"]}>
-              <CartPage/>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="coupon"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <Coupons />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="verifyotp"
+          element={
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <VerifyOtp />
             </ProtectedRoute>
           }
         />
 
         <Route path="/about" element={<About />} />
+        <Route path="/forgetpass" element={<ForgetPass />} />
+        <Route path="/forgetpassverify" element={<ForgetPassVerify />} />
 
         <Route path="/unauthorize" element={<UnAuthorize />} />
       </Routes>

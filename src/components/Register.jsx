@@ -63,19 +63,21 @@ const Register = () => {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-
     try {
       const res = await axios.post(`${apiUrl}/createuser`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       // setMessage(res.data.message);
       toast.success(res.data.message);
+      localStorage.setItem("verifyEmail", formData.email);
+      navigate("/verifyotp");
       setFormData({ name: "", email: "", password: "", userType: "" });
       // setErrors({});
       // setTimeout(() => setMessage(""), 3000);
-    } catch (err) {
+    } catch (error) {
       // setMessage(err.response?.data?.message || "Error creating user");
-      toast.error(err.response?.data?.message);
+      console.error(error.message)
+      toast.error(error.response?.data?.message);
       // setTimeout(() => setMessage(""), 3000);
     }
   };

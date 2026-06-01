@@ -111,11 +111,11 @@ const Login = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
         >
-          <h3 className="text-center mb-3 fw-bold">🔐 Login</h3>
+          <h3 className="text-center mb-2 fw-bold">🔐 Login</h3>
 
           <form onSubmit={handleSubmit}>
             {/* EMAIL */}
-            <div className="mb-3">
+            <div className="mb-2">
               <label className="form-label">Email</label>
               <input
                 type="email"
@@ -130,7 +130,7 @@ const Login = () => {
             </div>
 
             {/* PASSWORD */}
-            <div className="mb-3">
+            <div className="">
               <label className="form-label">Password</label>
               <input
                 type="password"
@@ -144,6 +144,15 @@ const Login = () => {
               {errors.password && (
                 <div className="invalid-feedback">{errors.password}</div>
               )}
+            </div>
+            <div className="d-flex justify-content-end mb-2 ">
+              <span
+                style={{ cursor: "pointer", textDecoration : "underline" }}
+                onClick={() => navigate("/forgetpass")}
+                className="bounce text-danger"
+              >
+                forgetPassword
+              </span>
             </div>
 
             <motion.button

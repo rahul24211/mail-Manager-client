@@ -17,6 +17,10 @@ const CartPage = () => {
   const [cartDetails, setCartDetails] = useState([]);
   const navigate = useNavigate();
   const [filtered, setFiltered] = useState([]);
+  const [code, setCode] = useState("");
+  const [data, setData] = useState([]);
+  const [cartById, setCartById] = useState([]);
+
   useEffect(() => {
     fetchCartDetails();
   }, []);
@@ -68,10 +72,32 @@ const CartPage = () => {
     }
   };
 
+  // const handleitem = (cart_id) => {
+  //   const filterData = cartDetails.find((item) => item.cart_id === cart_id);
+  //   setFiltered(filterData);
+  // };
+
+
+  const fetchCartById = async (cart_id) => {
+    
+    try {
+      const res = await axios.get(`${apiUrl}/getcartbyid?cart_id=${cart_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCartById(res.data.details);
+    } catch (error) {
+      console.error(error); 
+    }
+  };
   const removeCart = async (cart_id) => {
+    console.log(cart_id);
+    
     try {
       const res = await axios.delete(
         `${apiUrl}/deletecartproduct?cart_id=${cart_id}`,
+        
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -86,13 +112,24 @@ const CartPage = () => {
     }
   };
 
-  const handleitem = (cart_id) => {
-    const filterData = cartDetails.find((item) => item.cart_id === cart_id);
-    setFiltered(filterData);
+  const applyCoupon = async (cart_id) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/applycoupon?id=${cart_id}`,
+        { code },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      setData(res.data);
+      toast.success(res.data.message);
+    } catch (error) {
+      console.error(error.message);
+      toast.error(error.response?.data?.message);
+    }
   };
-
-  console.log("filteredData", filtered);
-
   return (
     <div className="container mt-5">
       <div className="row gap-5  ">
@@ -115,7 +152,7 @@ const CartPage = () => {
                     }}
                     src={`${apiUrl}${item.Product.Image}`}
                     className="me-2 p-1"
-                    onClick={() => handleitem(item.cart_id)}
+                    onClick={() => fetchCartById(item.cart_id)}
                   />
                 </div>
                 <div className="col-9">
@@ -199,7 +236,7 @@ const CartPage = () => {
             </span>
           </div>
           <div className="d-flex justify-content-between">
-            <span>Discount(-20%)</span>
+            <span>Coupon Discount</span>
             <span className="d-flex align-items-center text-danger">
               -
               <CurrencyRupee
@@ -207,7 +244,7 @@ const CartPage = () => {
                 className=""
                 size={17}
               />
-              58.80
+              {data.discount || 0}
             </span>
           </div>
           <div className="d-flex justify-content-between">
@@ -218,19 +255,19 @@ const CartPage = () => {
                 className=""
                 size={17}
               />
-              50.00
+              {filtered.deliveryFees || 0}
             </span>
           </div>
           <hr />
           <div className="d-flex justify-content-between">
-            <span>Total</span>
+            <span>Total Price</span>
             <span className="d-flex align-items-center">
               <CurrencyRupee
                 style={{ marginTop: "2px" }}
                 className=""
                 size={17}
               />
-              200.00
+              {data.finalAmount || filtered.total_price}
             </span>
           </div>
           <div className="container d-flex justify-content-between py-3">
@@ -239,10 +276,13 @@ const CartPage = () => {
               className="p-1 me-2"
               type="text"
               placeholder="Enter Promo Code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
             />
             <button
               style={{ borderRadius: "20px" }}
               className="btn btn-dark btn-sm "
+              onClick={() => applyCoupon(filtered.cart_id)}
             >
               Apply
             </button>

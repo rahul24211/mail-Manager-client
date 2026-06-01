@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import Loading from "../helper/Loading";
 
 const Profile = () => {
   const [refreshKey, setRefreshKey] = useState(Date.now());
@@ -19,6 +20,7 @@ const Profile = () => {
     city: "",
     state: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const [addDetails, setAddDetails] = useState({});
   const navigate = useNavigate();
@@ -111,6 +113,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       if (isEmpty(address)) {
         toast.error("Please Fill Atleast One Field");
         return;
@@ -120,6 +123,7 @@ const Profile = () => {
       });
 
       toast.success(res.data.message);
+      setLoading(false);
       setAddress({
         phoneN: "",
         line1: "",
@@ -130,6 +134,9 @@ const Profile = () => {
       fetchAddDetails();
     } catch (error) {
       toast.error(error.res?.data?.message || "Error creating user");
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -329,7 +336,7 @@ const Profile = () => {
               onChange={onchange}
             />
             <button className="form-control mt-2 btn btn-success">
-              Submite
+              {loading ? <Loading /> : "Submit"}
             </button>
           </form>
         </motion.div>

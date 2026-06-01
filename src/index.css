@@ -202,3 +202,12 @@ transform: scale(1.2);
   transform: scale(0.9);
  
 }
+
+.bounce{
+  transition: 0.4s ease;
+  cursor: pointer;
+}
+
+.bounce:active{
+  transform: scale(0.9);
+}

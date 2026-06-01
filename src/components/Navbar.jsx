@@ -196,6 +196,11 @@ const Navbar = () => {
             {role === "Admin" && (
               <>
               <li className="nav-item">
+                  <NavLink className="nav-link" to="/coupon" onClick={closeNavbar}>
+                   Coupons
+                  </NavLink>
+                </li>
+              <li className="nav-item">
                   <NavLink className="nav-link" to="/categories" onClick={closeNavbar}>
                    Books-Categories
                   </NavLink>
